@@ -9,6 +9,7 @@ from sklearn import linear_model
 ### Getting data
 url = "http://bit.ly/w-data"
 df = pd.read_csv(url)
+
 print("Data imported successfully")
 df.head(3)
 
