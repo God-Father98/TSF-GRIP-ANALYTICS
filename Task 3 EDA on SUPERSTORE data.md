@@ -7,13 +7,19 @@ import matplotlib.pyplot as plt
 %matplotlib inline
 
 import numpy as np
+
 import plotly as py
+
 import plotly.express as px
+
 from plotly.offline import iplot
+
 import cufflinks as cf
+
 cf.go_offline()
 
 df = pd.read_csv("SampleSuperstore.csv")
+
 df
 
 
@@ -22,32 +28,48 @@ df.isnull().sum()
 df.duplicated().value_counts()
 
 print(df[["Ship Mode"]].value_counts(),"\n")
+
 print(df[["Segment"]].value_counts(),"\n")
+
 print(df[["Region"]].value_counts(),"\n")
+
 print(df[["Category"]].value_counts(),"\n")
+
 print(df[["Sub-Category"]].value_counts(),"\n")
 
 
+
 s =df['Sales'].sum()
+
 p =df['Profit'].sum()
+
 print('Total Sales  =',s)
+
 print('Total Profit =',p)
+
 print('Profit Percentage = ',(p/(s-p))*100,'%')
 
 
 # 1
 #REGION WISE SALES AND PROFITS
+
 df_cat = df.groupby(["Region"],as_index = False)['Profit',"Sales"].sum()
+
 df_cat['Cost']= (df_cat.iloc[:,2]-df_cat.iloc[:,1])
+
 df_cat['Percentage']= (df_cat.iloc[:,1]/df_cat.iloc[:,3])*100
+
 df_cat
 
 frame = px.bar(data_frame=df_cat,x='Region', y= ['Profit','Cost'],color_discrete_sequence =['seagreen','darkslategray'],title = 'SALES AND PROFIT (Region-Wise)',width = 400,height=500)
+
 frame.show()
 
 
 
+
 pair = df[['Region', 'Sales','Discount','Quantity','Profit']]
+
 sns.pairplot(data=pair, hue= 'Region')
 
 
@@ -63,11 +85,14 @@ ________________________________________________________________________________
 dfgroup = df.groupby(['Region','Category'],as_index = False)['Profit','Sales'].sum()
 
 dfgroup['Cost']= (dfgroup.iloc[:,3]-dfgroup.iloc[:,2])
+
 dfgroup['Percentage']= (dfgroup.iloc[:,2]/dfgroup.iloc[:,4])*100
+
 dfgroup
 
 
 frame1 = px.bar(data_frame=dfgroup,x='Region', y= ['Profit','Cost'],color='Category', color_discrete_sequence=['crimson','dodgerblue','forestgreen'],title = 'COST AND PROFIT(Category and Region wise)',width = 800,height=500,barmode= 'group')
+
 frame1.show()
 
 
@@ -84,6 +109,7 @@ ________________________________________________________________________________
 ## SUB CATEGORY ANALYSIS
 
 dfsubgroup = df.groupby(['Sub-Category'],as_index = False)['Profit','Sales'].sum()
+
 dfsubgroup['Percentage']= (dfsubgroup.iloc[:,1]/dfsubgroup.iloc[:,2])*100
 
 colorsub= ['darkslategray','teal','midnightblue','crimson','blue','cornflowerblue','lightpink','palegreen','greenyellow','yellow','darkorange','orange','navajowhite','tomato','salmon','chocolate','maroon',]
@@ -105,10 +131,15 @@ Getiing a Bird's Eye View on the Data so far.
 
 
 dfcatsub = df.groupby(['Region','Category','Sub-Category'],as_index = False)['Profit','Sales'].sum()
+
 dfcatsub['Percentage']= (dfcatsub.iloc[:,3]/dfcatsub.iloc[:,4])*100
+
 dfcatsub['Cost']= (dfcatsub.iloc[:,4]-dfcatsub.iloc[:,3])
+
 dfcatsub
+
 frame2 = px.bar(data_frame=dfcatsub,x='Sub-Category', y= ['Profit','Cost'],color='Category', color_discrete_sequence=['crimson','dodgerblue','forestgreen'],title = 'COST AND PROFIT (SUB-CATEGORY & REGION-WISE) ',width = 1200,height=500,barmode= 'group',facet_col = 'Region',facet_col_spacing =0)
+
 frame2.show()
 
 # Results 1-2-3
@@ -124,12 +155,17 @@ so we need to put an effort in  all subcategories Central have except chairs..
 ____________________________________________________________________________________________________________________________
 
 #calculating state wise and determining the Sales and the Profits...
+
 statewise = df.groupby(['State'],as_index=False)['Profit','Sales'].sum()
+
 statewise['Cost']= (statewise.iloc[:,2]-statewise.iloc[:,1])
+
 statewise['Percentage']= (statewise.iloc[:,1]/statewise.iloc[:,3])*100
 
 qq = statewise.sort_values(by= 'Profit', ascending = 0)
+
 qq
+
 qq.iplot(kind= 'bar', x = ["State"], y =['Sales'] ,title = "SALES STATE WISE", xTitle = "STATES", yTitle= "Sales", bargap =0.2, color = ["forestgreen", "steelblue"],dimensions = (1200,500))
 
 qq.iplot(kind= 'bar', x = ["State"], y =['Profit'] ,title = "PROFIT STATE WISE", xTitle = "STATES", yTitle= "Profit", bargap =0.2, color = ["steelblue"],dimensions = (1200,500))
@@ -140,15 +176,20 @@ qq.iplot(kind= 'bar', x = ["State"], y =['Percentage'] ,title = "PROFIT PERCENTA
 
 
 statewise1 = df.groupby(['State','Sub-Category'],as_index=False)['Profit','Sales'].sum()
+
 statewise1['Cost']= (statewise1.iloc[:,3]-statewise1.iloc[:,2])
+
 statewise1['Percentage']= (statewise1.iloc[:,2]/statewise1.iloc[:,4])*100
+
 
 statewise1.iplot(kind= 'bar', x = ['State','Sub-Category'], y =['Profit','Sales'] ,title = "STATE WISE DISTRIBUTION OF Profit & Sales", xTitle = "STATES", bargap =0.2, color = ['darkorange', "steelblue"], dimensions = (1200,500))
 
 
 
 statewise2 = df.groupby(['Sub-Category','State'],as_index=False)['Profit','Sales'].sum()
+
 statewise2['Cost']= (statewise2.iloc[:,3]-statewise2.iloc[:,2])
+
 statewise2['Percentage']= (statewise2.iloc[:,2]/statewise2.iloc[:,4])*100
 
 statewise2.iplot(kind= 'bar', x = ['Sub-Category','State'], y =['Profit','Sales'] ,title = "SUB CATEGORY WISE distribution of PROFIT AND SALES", xTitle = "STATES", bargap =0.2, color = ['darkorange', "steelblue"], dimensions = (1200,500))
@@ -163,28 +204,38 @@ statewise2.iplot(kind= 'bar', x = ['Sub-Category','State'], y =['Percentage'] ,t
 
 # Analyzing the Discounts:
 d = df[['Discount']]
+
 d.value_counts()
 
 ##trying to find a solid proof
 dp = df[["Discount", "Profit"]]
+
 print(dp.corr())
+
 # not good
 sns.lmplot(x = 'Discount', y = "Profit", data = df);
 
 
 ds =df[["Discount", "Sales"]]
+
 print(ds.corr())
+
 #not good either
+
 sns.lmplot(x='Discount', y ="Sales" ,data =df);
 
 dq = df[['Discount', "Quantity"]]
+
+
 print(dq.corr())
+
 sns.lmplot(x = 'Discount', y = "Quantity", data = df);
 
 # lets see who has got the most discounts that is more than 30%
-highdiscount = df[(df['Discount'] >=0.30)]
-sns.countplot(x = highdiscount['Region']);
 
+highdiscount = df[(df['Discount'] >=0.30)]
+
+sns.countplot(x = highdiscount['Region']);
 
 RESULTS of the Discount Analysis
 
@@ -192,21 +243,27 @@ RESULTS of the Discount Analysis
  but we can see that most discounts were given in the  Central region
  
  
- centralonly= df[(df['Region']=='Central')]
+centralonly= df[(df['Region']=='Central')]
+
 centralonly[['Discount']].describe()
 
 central_ds = centralonly[['Discount','Sales']]
+
 print(central_ds.corr())
+
 sns.lmplot(x = 'Discount', y = "Sales", data = central_ds);
 
 central_dp = centralonly[['Discount', "Profit"]]
+
 print(central_dp.corr())
 
 sns.lmplot(x = 'Discount', y = "Profit", data = central_dp);
 
 
 # Checkingm which Category is giving the most loss.
+
 cent= centralonly.groupby(['Category'],as_index=False)['Profit','Sales'].sum()
+
 cent
 
 
@@ -214,7 +271,9 @@ cent
 
 
 central_fur = df[(df['Region']=="Central") & (df["Category"] == "Furniture")]
+
 central_fur_ds = central_fur[['Discount','Quantity']]
+
 print(central_fur_ds.corr())
 
 sns.lmplot(x = 'Discount', y = "Quantity", data = central_fur_ds);
@@ -222,6 +281,7 @@ sns.lmplot(x = 'Discount', y = "Quantity", data = central_fur_ds);
 
 
 central_fur_ds = central_fur[['Discount','Sales']]
+
 print(central_fur_ds.corr())
 
 sns.lmplot(x = 'Discount', y = "Sales", data = central_fur_ds);
@@ -229,6 +289,8 @@ sns.lmplot(x = 'Discount', y = "Sales", data = central_fur_ds);
 
 
 central_fur_dp = central_fur[['Discount',"Profit"]]
+
+
 print(central_fur_dp.corr())
 
 sns.lmplot(x = 'Discount', y = "Profit", data = central_fur_dp);
