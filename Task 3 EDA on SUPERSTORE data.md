@@ -1,7 +1,11 @@
 import pandas as pd
+
 import seaborn as sns
+
 import matplotlib.pyplot as plt
+
 %matplotlib inline
+
 import numpy as np
 import plotly as py
 import plotly.express as px
